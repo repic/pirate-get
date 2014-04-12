@@ -103,7 +103,7 @@ def main():
 
     if mags and len(mags) > 0:
         # enhanced print output with column titles
-        print "\n%-5s %-6s %-6s %-5s %-11s %-11s  %s" % ( "LINK", "SEED", "LEECH", "RATIO", "SIZE", "UPLOAD", "NAME")
+        print "\n%-4s %-5s %-5s %-11s %-11s  %s" % ( "LINK", "SEED", "RATIO", "SIZE", "UPLOAD", "NAME")
         for m in range(len(mags)):
             magnet = mags[m]
             name = re.search("dn=([^\&]*)", magnet[0])
@@ -115,7 +115,7 @@ def main():
                 ratio = 0
 
             # enhanced print output with justified columns
-            print "%-5s %-6s %-6s %5.1f %-11s %-11s  %s" % (m, magnet[1], magnet[2], ratio ,sizes[m], uploaded[m],urllib.unquote(name.group(1).encode('ascii')).decode('utf-8').replace("+", " ") )
+            print "%-4s %-5s %5.1f %-11s %-11s  %s" % (m, magnet[1], ratio ,sizes[m], uploaded[m],urllib.unquote(name.group(1).encode('ascii')).decode('utf-8').replace("+", " ") )
 
         try:
             l_array = raw_input("Select links (separate with one space): ").split()
