@@ -118,20 +118,21 @@ def main():
             print "%-5s %-6s %-6s %5.1f %-11s %-11s  %s" % (m, magnet[1], magnet[2], ratio ,sizes[m], uploaded[m],urllib.unquote(name.group(1).encode('ascii')).decode('utf-8').replace("+", " ") )
 
         try:
-            l = raw_input("Select a link: ")
+            l_array = raw_input("Select links (separate with one space): ").split()
         except KeyboardInterrupt :
             print "\nCancelled."
             exit()
 
-        try:
-            choice = int(l)
-        except Exception:
-            choice = None
+        for l in l_array :
+            try:
+                choice = int(l)
+            except Exception:
+                choice = None
 
-        if not choice == None:
-            webbrowser.open(mags[choice][0])
-        else:
-            print "Cancelled."
+            if not choice == None:
+                webbrowser.open(mags[choice][0])
+            else:
+                print "Cancelled."
     else:
         print "no results"
 
