@@ -6,7 +6,8 @@ import re
 from HTMLParser import HTMLParser
 import argparse
 from pprint import pprint
-
+from StringIO import StringIO
+import gzip
 
 # create a subclass and override the handler methods
 class MyHTMLParser(HTMLParser):
@@ -64,12 +65,23 @@ def main():
         # Catch the Ctrl-C exception and exit cleanly
         try:
             for page in xrange(pages):
-                f = urllib2.urlopen('http://thepiratebay.se/search/' + args.q.replace(" ", "+") + '/' + str(page) + '/7/0')
-                res = f.read()
+                request = urllib2.Request('http://thepiratebay.se/search/' + args.q.replace(" ", "+") + '/' + str(page) + '/7/0')
+                request.add_header('Accept-encoding', 'gzip')
+                response = urllib2.urlopen(request)
+                if response.info().get('Content-Encoding') == 'gzip':
+                    buf = StringIO(response.read())
+                    res = gzip.GzipFile(fileobj=buf).read()
+                else:
+                    res = response.read()
+                # res = f.read(102400)
                 found = re.findall(""""(magnet\:\?xt=[^"]*)|<td align="right">([^<]+)</td>""", res)
 
                 # get sizes as well and substitute the &nbsp; character
+
                 # print res
+                # print f
+                # print 'http://thepiratebay.se/search/' + args.q.replace(" ", "+") + '/' + str(page) + '0/99/0'
+
                 sizes = [ match.replace("&nbsp;", " ") for match in re.findall("(?<=Size )[0-9.]+\&nbsp\;[KMGT]*[i ]*B",res) ]
                 uploaded = [ match.replace("&nbsp;", " ") for match in re.findall("(?<=Uploaded ).+(?=\, Size)",res) ]
                 # pprint(sizes); print len(sizes)
